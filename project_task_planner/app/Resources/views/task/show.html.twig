@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Task</h1>
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ task.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ task.name }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ task.description }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ task.date | date}}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            {% if task.category %}
+            <td>{{ task.category.name }}</td>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('app_task_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}
