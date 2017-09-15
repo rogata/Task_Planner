@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+
 /**
  * Class TaskController
  * @Route("/task")
@@ -26,6 +27,7 @@ class TaskController extends Controller
         return $this->render('task/index.html.twig', array(
             'tasks' => $tasks,
         ));
+
     }
     /**
      * @Route("/new", name="task_new")
@@ -56,11 +58,11 @@ class TaskController extends Controller
      */
     public function showAction(Task $task)
     {
-       // $deleteForm = $this->createDeleteForm($contact);
+        $deleteForm = $this->createDeleteForm($task);
 
         return $this->render('task/show.html.twig', array(
             'task' => $task,
-           // 'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView(),
         ));
     }
     /**
@@ -75,7 +77,7 @@ class TaskController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('task_edit', array('id' => $task->getId()));
+            return $this->redirectToRoute('app_task_index', array('id' => $task->getId()));
         }
 
         return $this->render('task/edit.html.twig', array(
@@ -83,6 +85,46 @@ class TaskController extends Controller
             'edit_form'=>$editForm->createView(),
         ));
 
+    }
+    /**
+     * @Route("/{id}", name="task_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Task $task)
+    {
+        $form = $this->createDeleteForm($task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($task);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_task_index');
+
+    }
+    private function createDeleteForm(Task $task)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('task_delete', array('id' => $task->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+            ;
+    }
+
+    /**
+     * @Route("/completed")
+     */
+    public function completedAction()
+    {
+        $em  = $this->getDoctrine()->getManager();
+        $completed = $em ->getRepository('AppBundle:Task')->findBy(['checked'=> true]);
+
+
+            return $this->render(':task:completed.html.twig', [
+                'completed'=> $completed,
+            ]);
 
     }
 

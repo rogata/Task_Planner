@@ -20,10 +20,10 @@ class CategoryController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository('AppBundle:Category')->findAll();
+        $category = $em->getRepository('AppBundle:Category')->findAll();
 
         return $this->render('category/index.html.twig', array(
-            'category'=>$categories,
+            'category'=>$category,
         ));
 
     }
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_category_edit', array('id' => $category->getId()));
+            return $this->redirectToRoute('category_edit', array('id' => $category->getId()));
         }
 
         return $this->render('category/edit.html.twig', array(

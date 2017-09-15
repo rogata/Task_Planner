@@ -2,7 +2,6 @@
 
 {% block body %}
     <h1>Tasks list</h1>
-
     <table>
         <thead>
         <tr>
@@ -16,25 +15,26 @@
         <tbody>
         {% for task in tasks %}
             <tr>
-                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
-                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.name }}</a></td>
-                <td>{{ task.description }}</td>
-                <td>{{ task.date| date }}</td>
-                {% if task.category %}
-                <td>{{ task.category.name }}</td>
+                {% if task.checked == false %}
+                    <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
+                    <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.name }}</a></td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.date| date }}</td>
+                    {% if task.category %}
+                        <td>{{ task.category.name }}</td>
+                    {% endif %}
+                    {% if task.date < date() %}
+                        <td>Task after time! Is done?</td>
+                    {% endif %}
                 {% endif %}
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('task_edit', { 'id': task.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <ul>
+        <li>
+            <a href="{{  path('app_task_completed') }}">completed tasks</a>
+        </li>
         <li>
             <a href="{{ path('task_new') }}">Create a new task</a>
         </li>
@@ -42,5 +42,4 @@
             <a href="{{ path('app_category_new') }}">Create a new category</a>
         </li>
     </ul>
-
 {% endblock %}
