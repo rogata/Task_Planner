@@ -45,7 +45,8 @@ class Task
     private $date;
     /**
      * @var boolean
-     * @ORM\Column(name="checked", type="boolean")
+     * @ORM\Column(name="checked", type="boolean", nullable=true)
+     *
      */
     private $checked;
 
@@ -53,6 +54,10 @@ class Task
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="tasks")
      */
     private $category;
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="task")
+     */
+    private $notes;
 
 
     /**
@@ -179,5 +184,45 @@ class Task
     public function getCategory()
     {
         return $this->category;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     * @return Task
+     */
+    public function addNote(\AppBundle\Entity\Note $notes)
+    {
+        $this->notes[] = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Remove notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     */
+    public function removeNote(\AppBundle\Entity\Note $notes)
+    {
+        $this->notes->removeElement($notes);
+    }
+
+    /**
+     * Get notes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }

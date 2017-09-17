@@ -1,13 +1,18 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <h1>Tasks list</h1>
-    <table>
+    {{ parent() }}
+{% endblock %}
+{% block ul %}
+    <a href="{{ path('task_new') }}" class="list-group-item">New task</a>
+    <a href="{{ path('app_category_new') }}" class="list-group-item">Category</a>
+    <a href="{{  path('app_task_completed') }}" class="list-group-item">Finished</a>
+{% endblock %}
+    {% block table %}
+    <table class="table table-striped">
         <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
-            <th>Description</th>
             <th>Date</th>
             <th>Category</th>
         </tr>
@@ -16,30 +21,24 @@
         {% for task in tasks %}
             <tr>
                 {% if task.checked == false %}
-                    <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
-                    <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.name }}</a></td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.date| date }}</td>
+                    <td>
+                        <a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.name }}</a>
+                    </td>
+                    <td>
+                    {% if task.date < date() %}
+                            <div class="alert alert-danger">
+                                <strong>After time!</strong> Is it done?
+                            </div>
+                    {% else %}
+                        {{ task.date| date }}
+                    {% endif %}
+                    </td>
                     {% if task.category %}
                         <td>{{ task.category.name }}</td>
-                    {% endif %}
-                    {% if task.date < date() %}
-                        <td>Task after time! Is done?</td>
                     {% endif %}
                 {% endif %}
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <ul>
-        <li>
-            <a href="{{  path('app_task_completed') }}">completed tasks</a>
-        </li>
-        <li>
-            <a href="{{ path('task_new') }}">Create a new task</a>
-        </li>
-        <li>
-            <a href="{{ path('app_category_new') }}">Create a new category</a>
-        </li>
-    </ul>
-{% endblock %}
+    {% endblock %}

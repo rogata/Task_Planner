@@ -17,7 +17,6 @@ class TaskType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('date')
-            ->add('checked')
             ->add('category', null, ['choice_label' => 'name'])
         ;
     }

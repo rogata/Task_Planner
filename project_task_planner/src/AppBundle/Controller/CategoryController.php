@@ -55,19 +55,48 @@ class CategoryController extends Controller
      */
     public function editAction(Request $request, Category $category)
     {
+        $deleteForm = $this->createDeleteForm($category);
+
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('category_edit', array('id' => $category->getId()));
+            return $this->redirectToRoute('app_category_index', array('id' => $category->getId()));
         }
 
         return $this->render('category/edit.html.twig', array(
             'category'=>$category,
             'edit_form'=>$editForm->createView(),
+            'delete_form'=>$deleteForm->createView(),
         ));
 
+    }
+    /**
+     * @Route("/{id}", name="category_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Category $category)
+    {
+        $form = $this->createDeleteForm($category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($category);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_category_index');
+
+    }
+    private function createDeleteForm(Category $category)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('category_delete', array('id' => $category->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+            ;
     }
 }

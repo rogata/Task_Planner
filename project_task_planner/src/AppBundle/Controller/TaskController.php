@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
+use function PHPSTORM_META\type;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,9 +25,9 @@ class TaskController extends Controller
 
         $tasks = $em->getRepository("AppBundle:Task")->findAll();
 
-        return $this->render('task/index.html.twig', array(
+        return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
-        ));
+        ]);
 
     }
     /**
@@ -44,13 +45,13 @@ class TaskController extends Controller
             $em->persist($task);
             $em->flush();
 
-            return $this->redirectToRoute('task_show', array('id' => $task->getId()));
+            return $this->redirectToRoute('task_show', ['id' => $task->getId()]);
         }
 
-        return $this->render('task/new.html.twig', array(
+        return $this->render('task/new.html.twig', [
             'task' => $task,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -60,10 +61,10 @@ class TaskController extends Controller
     {
         $deleteForm = $this->createDeleteForm($task);
 
-        return $this->render('task/show.html.twig', array(
+        return $this->render('task/show.html.twig', [
             'task' => $task,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
     /**
      * @Route("/edit/{id}", name="task_edit")
@@ -74,16 +75,31 @@ class TaskController extends Controller
         $editForm = $this->createForm('AppBundle\Form\TaskType', $task);
         $editForm->handleRequest($request);
 
+        $checkedForm = $this->createFormBuilder($task)
+            ->add('checked')
+            ->getForm();
+        $checkedForm->handleRequest($request);
+
+        if ($checkedForm ->isSubmitted()) {
+            $task = $checkedForm->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($task);
+            $em->flush();
+
+            return $this->redirectToRoute('app_task_index');
+        }
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_task_index', array('id' => $task->getId()));
+            return $this->redirectToRoute('app_task_index', ['id' => $task->getId()]);
         }
 
-        return $this->render('task/edit.html.twig', array(
+        return $this->render('task/edit.html.twig', [
             'task'=>$task,
             'edit_form'=>$editForm->createView(),
-        ));
+            'checked_form' =>$checkedForm->createView(),
+        ]);
 
     }
     /**
@@ -107,11 +123,12 @@ class TaskController extends Controller
     private function createDeleteForm(Task $task)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('task_delete', array('id' => $task->getId())))
+            ->setAction($this->generateUrl('task_delete', ['id' => $task->getId()]))
             ->setMethod('DELETE')
             ->getForm()
             ;
     }
+
 
     /**
      * @Route("/completed")
