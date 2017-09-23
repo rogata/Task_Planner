@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Note;
 use AppBundle\Entity\Task;
-use function PHPSTORM_META\type;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -22,8 +23,7 @@ class TaskController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
-        $tasks = $em->getRepository("AppBundle:Task")->findAll();
+        $tasks = $em->getRepository("AppBundle:Task")->findBy([],['date'=>'ASC']);
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
@@ -56,13 +56,26 @@ class TaskController extends Controller
 
     /**
      * @Route("/show/{id}", name="task_show")
+     * @Method({"GET","POST"})
      */
     public function showAction(Task $task)
     {
+        $note = new Note();
+        $form = $this->createFormBuilder($note)
+            ->setAction($this->generateUrl('app_task_addnote',['id'=>$task->getId()]))
+            ->add('text', 'text')
+            ->getForm();
+
+        $em = $this->getDoctrine()->getManager();
+        $notes = $em->getRepository('AppBundle:Note')->findBy(['task'=>$task->getId()]);
+
+
         $deleteForm = $this->createDeleteForm($task);
 
         return $this->render('task/show.html.twig', [
+            'notes'=>$notes,
             'task' => $task,
+            'note_form' =>$form->createView(),
             'delete_form' => $deleteForm->createView(),
         ]);
     }
@@ -92,7 +105,7 @@ class TaskController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_task_index', ['id' => $task->getId()]);
+            return $this->redirectToRoute('task_show', ['id' => $task->getId()]);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -143,6 +156,34 @@ class TaskController extends Controller
                 'completed'=> $completed,
             ]);
 
+    }
+
+    /**
+     * @Route("/add_note/{id}")
+     */
+    public function addNoteAction(Request $request, $id)
+    {
+        $note = new Note();
+        $task = $this->getDoctrine()->getRepository('AppBundle:Task')->find($id);
+        $form = $this->createFormBuilder($note)
+            ->add('text', 'text')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if(!$task){
+            throw $this->createNotFoundException('Task not found!');
+        }
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $note->setTask($task);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($note);
+            $em->flush();
+
+        }
+
+        return $this->redirectToRoute('task_show',['id'=>$id]);
     }
 
 }

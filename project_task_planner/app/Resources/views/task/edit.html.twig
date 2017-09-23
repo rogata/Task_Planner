@@ -1,20 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Edit task</h1>
-
-    {{ form_start(edit_form) }}
-    {{ form_widget(edit_form) }}
-    <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
-
-    {{ form_start(checked_form) }}
-    {{ form_widget(checked_form) }}
-    <input type="submit" value="done">
-    {{ form_end(checked_form) }}
-    <ul>
-        <li>
-            <a href="{{ path('app_task_index') }}">Back to the list</a>
-        </li>
-    </ul>
+    {{ parent() }}
+{% endblock %}
+{% block thead %}
+    <th>Edit</th>
+    <th>Done</th>
+{% endblock %}
+{% block tbody %}
+    <tr>
+        <td>
+            {{ form_start(edit_form) }}
+            <div class="form-group">
+                <div class="control-label col-sm-2">{{ form_label(edit_form.name) }}</div>
+                <div class="col-sm-10">
+                    {{ form_widget(edit_form.name) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-sm-2">{{ form_label(edit_form.description) }}</div>
+                <div class="col-sm-10">
+                    {{ form_widget(edit_form.description) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-sm-2">{{ form_label(edit_form.category) }}</div>
+                <div class="col-sm-3">
+                    {{ form_widget(edit_form.category) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-sm-2">{{ form_label(edit_form.date) }}</div>
+                <div class="col-sm-3">
+                    {{ form_widget(edit_form.date) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" value="Edit" />
+                </div>
+            </div>
+            {{ form_end(edit_form) }}
+        </td>
+        <td>
+            {{ form_start(checked_form) }}
+            {{ form_widget(checked_form) }}
+            <input type="submit" value="Done">
+            {{ form_end(checked_form) }}
+        </td>
+    </tr>
+{% endblock %}
+{% block ul %}
+    <a href="{{ path('task_show', {'id': task.id}) }}" class="list-group-item">Back</a>
 {% endblock %}

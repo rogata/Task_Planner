@@ -225,4 +225,17 @@ class Task
     {
         return $this->notes;
     }
+
+    /**
+     * Set notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     * @return Task
+     */
+    public function setNotes(\AppBundle\Entity\Note $notes = null)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
 }

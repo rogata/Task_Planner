@@ -3,28 +3,41 @@
 {% block body %}
 {{ parent () }}
 {% endblock %}
-    {% block table %}
-        <h2>{{ task.name }}</h2>
-        <h5><strong>Date: </strong>{{ task.date | date}}</h5>
+    {% block thead %}
+        <th>{{ task.name }}</th>
+        <th>{{ task.date|date }}</th>
         {% if task.category %}
-            <h5><strong>Category: </strong>{{ task.category.name }}</h5>
+            <th>{{ task.category.name }}</th>
         {% endif %}
-        <p>{{ task.description }}</p>
-        <hr>
-        <h4>Note</h4>
-        <form method="post" action="{{ path('app_note_new') }}">
-            <div class="form-group">
-                <textarea class="form-control" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-        </form>
-        <br><br>
+    {% endblock %}
+    {% block tbody %}
+        <tr>
+            <td>{{ task.description }}</td>
+        </tr>
+        <tr>
+            <td>
+                {% if notes %}
+                    {% for note in notes %}
+                        <ul>
+                            <li>{{ note.text }}</li>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ form_start(note_form) }}
+                {{ form_widget(note_form) }}
+                <input type="submit" value="Add note">
+                {{ form_end(note_form) }}
 
+            </td>
+        </tr>
     {% endblock %}
     {% block ul %}
-            <a href="{{ path('task_edit', { 'id': task.id }) }}" class="list-group-item">Edit task</a>
-            <a href="{{ path('app_task_index') }}" class="list-group-item">Start page</a>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
+        <a href="{{ path('task_edit', { 'id': task.id }) }}" class="list-group-item">Edit task</a>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Delete">
+        {{ form_end(delete_form) }}
     {% endblock %}

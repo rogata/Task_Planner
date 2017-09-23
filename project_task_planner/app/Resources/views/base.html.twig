@@ -20,10 +20,24 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <div class="list-group">{% block ul %}{% endblock %}</div>
+                        <div class="list-group">
+                            <a href="{{ path('app_task_index') }}" class="list-group-item">HOME</a>
+                            {% block ul %}{% endblock %}
+                        </div>
                     </div>
                     <div class="col-md-10">
-                        {% block table %}{% endblock %}
+                        {% block table %}
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                {% block thead %}{% endblock %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% block tbody %}{% endblock %}
+                            </tbody>
+                        </table>
+                        {% endblock %}
                     </div>
                 </div>
             </div>

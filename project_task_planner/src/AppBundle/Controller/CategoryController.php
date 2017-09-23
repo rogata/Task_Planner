@@ -16,23 +16,13 @@ class CategoryController extends Controller
 {
     /**
      * @Route("/")
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:Category')->findAll();
-
-        return $this->render('category/index.html.twig', array(
-            'category'=>$category,
-        ));
-
-    }
-    /**
-     * @Route("/new")
      * @Method({"GET","POST"})
      */
-    public function newAction(Request $request)
+    public function indexAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $allCategory = $em->getRepository('AppBundle:Category')->findAll();
+
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -44,8 +34,10 @@ class CategoryController extends Controller
 
         }
 
-        return $this->render('category/new.html.twig', array(
-            'form'=>$form->createView()
+
+        return $this->render('category/index.html.twig', array(
+            'category'=>$allCategory,
+            'form' =>$form->createView()
         ));
 
     }

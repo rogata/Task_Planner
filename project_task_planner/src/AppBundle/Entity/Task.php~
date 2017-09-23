@@ -185,4 +185,57 @@ class Task
     {
         return $this->category;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     * @return Task
+     */
+    public function addNote(\AppBundle\Entity\Note $notes)
+    {
+        $this->notes[] = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Remove notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     */
+    public function removeNote(\AppBundle\Entity\Note $notes)
+    {
+        $this->notes->removeElement($notes);
+    }
+
+    /**
+     * Get notes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Set notes
+     *
+     * @param \AppBundle\Entity\Note $notes
+     * @return Task
+     */
+    public function setNotes(\AppBundle\Entity\Note $notes = null)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
 }

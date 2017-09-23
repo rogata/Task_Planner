@@ -4,20 +4,16 @@
     {{ parent() }}
 {% endblock %}
 {% block ul %}
-    <a href="{{ path('task_new') }}" class="list-group-item">New task</a>
-    <a href="{{ path('app_category_new') }}" class="list-group-item">Category</a>
-    <a href="{{  path('app_task_completed') }}" class="list-group-item">Finished</a>
+    <a href="{{ path('task_new') }}" class="list-group-item" >New task</a>
+    <a href="{{ path('app_category_index') }}" class="list-group-item">Category</a>
+    <a href="{{  path('app_task_completed') }}" class="list-group-item">Archive</a>
 {% endblock %}
-    {% block table %}
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Category</th>
-        </tr>
-        </thead>
-        <tbody>
+    {% block thead %}
+        <th>Name</th>
+        <th>Date</th>
+        <th>Category</th>
+    {% endblock %}
+    {% block tbody %}
         {% for task in tasks %}
             <tr>
                 {% if task.checked == false %}
@@ -39,6 +35,4 @@
                 {% endif %}
             </tr>
         {% endfor %}
-        </tbody>
-    </table>
     {% endblock %}

@@ -65,6 +65,7 @@ class Note
     {
         return $this->text;
     }
+    
 
     /**
      * Set task
