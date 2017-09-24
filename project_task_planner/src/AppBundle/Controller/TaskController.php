@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TaskController
- * @Route("/task")
  */
 class TaskController extends Controller
 {
@@ -23,7 +22,7 @@ class TaskController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $tasks = $em->getRepository("AppBundle:Task")->findBy([],['date'=>'ASC']);
+        $tasks = $em->getRepository("AppBundle:Task")->findBy(['user'=> $this->getUser()],['date'=>'ASC']);
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
@@ -37,6 +36,8 @@ class TaskController extends Controller
     public function newAction(Request $request)
     {
         $task = new Task();
+        $task->setUser($this->getUser());
+
         $form = $this->createForm('AppBundle\Form\TaskType', $task);
         $form->handleRequest($request);
 
@@ -85,6 +86,9 @@ class TaskController extends Controller
      */
     public function editAction(Request $request, Task $task)
     {
+        if($task->getUser() !== $this->getUser()){
+            throw $this->createAccessDeniedException('Access denide');
+        }
         $editForm = $this->createForm('AppBundle\Form\TaskType', $task);
         $editForm->handleRequest($request);
 

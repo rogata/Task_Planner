@@ -18,13 +18,17 @@
                 <div class="jumbotron">
                     <h1>Task Planner</h1>
                 </div>
+                {% block register %}{% endblock %}
+                {% block login %}{% endblock %}
                 <div class="row">
+                    {% block home %}
                     <div class="col-md-2">
                         <div class="list-group">
                             <a href="{{ path('app_task_index') }}" class="list-group-item">HOME</a>
                             {% block ul %}{% endblock %}
                         </div>
                     </div>
+                    {% endblock %}
                     <div class="col-md-10">
                         {% block table %}
                         <table class="table table-striped">
@@ -41,11 +45,11 @@
                     </div>
                 </div>
             </div>
+        {% endblock %}
 
             <footer class="container-fluid">
                 <p>@rogata 2017</p>
             </footer>
-        {% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

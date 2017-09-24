@@ -58,6 +58,10 @@ class Task
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="task")
      */
     private $notes;
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="tasks")
+     */
+    private $user;
 
 
     /**

@@ -66,4 +66,27 @@ class Note
         return $this->text;
     }
     
+
+    /**
+     * Set task
+     *
+     * @param \AppBundle\Entity\Task $task
+     * @return Note
+     */
+    public function setTask(\AppBundle\Entity\Task $task = null)
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    /**
+     * Get task
+     *
+     * @return \AppBundle\Entity\Task 
+     */
+    public function getTask()
+    {
+        return $this->task;
+    }
 }

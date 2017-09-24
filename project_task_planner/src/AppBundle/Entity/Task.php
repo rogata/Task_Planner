@@ -58,6 +58,10 @@ class Task
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="task")
      */
     private $notes;
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="tasks")
+     */
+    private $user;
 
 
     /**
@@ -237,5 +241,28 @@ class Task
         $this->notes = $notes;
 
         return $this;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     * @return Task
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
