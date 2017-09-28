@@ -18,6 +18,19 @@
                 <div class="jumbotron">
                     <h1>Task Planner</h1>
                 </div>
+                {% if app.user %}
+                <div class="row">
+                        <div class="col-md-10">
+                            {% block username %}
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                     <strong style="font-size: x-large">{{ app.user.username }}</strong>
+                                 {% endif %}
+                            {% endblock %}</div>
+                        <div class="col-md-2">
+                            <a href="{{ url('fos_user_security_logout') }}" class="list-group-item">LogOut</a>
+                         </div>
+                </div>
+                {% endif %}
                 {% block register %}{% endblock %}
                 {% block login %}{% endblock %}
                 <div class="row">

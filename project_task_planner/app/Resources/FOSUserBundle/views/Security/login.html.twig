@@ -10,4 +10,11 @@
         </div>
     </div>
 {% endblock%}
-{% block home %}{% endblock %}
+ {% block home %}
+     <div class="col-md-6">
+         <div class="list-group">
+             <a href="{{ url('fos_user_registration_register') }}" class="list-group-item">Register</a>
+             {% block ul %}{% endblock %}
+         </div>
+     </div>
+ {% endblock %}

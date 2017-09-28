@@ -9,6 +9,7 @@
     <th>Category</th>
 {% endblock %}
 {% block tbody %}
+    {%  if completed %}
     {% for complete in completed %}
         <tr>
             <td><a href="{{ path('task_show', { 'id': complete.id }) }}">{{ complete.name }}</a></td>
@@ -25,4 +26,5 @@
             </td>
         </tr>
     {% endfor %}
+    {% endif %}
 {% endblock %}

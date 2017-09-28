@@ -23,9 +23,11 @@ class TaskController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $tasks = $em->getRepository("AppBundle:Task")->findBy(['user'=> $this->getUser()],['date'=>'ASC']);
+        $name = $this->getUser()->getUsername();
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
+            'name'=>$name,
         ]);
 
     }
@@ -61,6 +63,9 @@ class TaskController extends Controller
      */
     public function showAction(Task $task)
     {
+        if($task->getUser() !== $this->getUser()){
+            throw $this->createAccessDeniedException('Access denied');
+        }
         $note = new Note();
         $form = $this->createFormBuilder($note)
             ->setAction($this->generateUrl('app_task_addnote',['id'=>$task->getId()]))
@@ -87,7 +92,7 @@ class TaskController extends Controller
     public function editAction(Request $request, Task $task)
     {
         if($task->getUser() !== $this->getUser()){
-            throw $this->createAccessDeniedException('Access denide');
+            throw $this->createAccessDeniedException('Access denied');
         }
         $editForm = $this->createForm('AppBundle\Form\TaskType', $task);
         $editForm->handleRequest($request);
@@ -125,6 +130,9 @@ class TaskController extends Controller
      */
     public function deleteAction(Request $request, Task $task)
     {
+        if($task->getUser() !== $this->getUser()){
+            throw $this->createAccessDeniedException('Access denied');
+        }
         $form = $this->createDeleteForm($task);
         $form->handleRequest($request);
 
@@ -152,6 +160,7 @@ class TaskController extends Controller
      */
     public function completedAction()
     {
+
         $em  = $this->getDoctrine()->getManager();
         $completed = $em ->getRepository('AppBundle:Task')->findBy(['checked'=> true]);
 
@@ -167,6 +176,7 @@ class TaskController extends Controller
      */
     public function addNoteAction(Request $request, $id)
     {
+
         $note = new Note();
         $task = $this->getDoctrine()->getRepository('AppBundle:Task')->find($id);
         $form = $this->createFormBuilder($note)
